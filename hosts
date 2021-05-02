@@ -1,0 +1,10 @@
+[routers]
+r1 ansible_host=10.10.10.11
+r2 ansible_host=10.10.10.22
+
+
+[routers:vars]
+ansible_user=hamid
+ansible_ssh_pass=hamid
+ansible_connection=network_cli
+ansible_network_os=ios

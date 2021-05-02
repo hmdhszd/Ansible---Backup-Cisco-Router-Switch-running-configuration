@@ -1,0 +1,51 @@
+---
+
+- name: backup configuration
+  hosts: routers
+
+
+
+  vars:
+    backup_root: ./backup
+
+
+
+
+  tasks:
+    - name: execute show running config on remote device
+      ios_command:
+        commands: show running
+      register: config
+
+
+
+  
+    - name: ensure that Backup folder is created
+      file:
+        path: "{{ backup_root }}"
+        state: directory
+      run_once: yes
+
+
+
+
+    - name: ensure that Device folder is created
+      file:
+        path: "{{ backup_root }}/{{ inventory_hostname }}"
+        state: directory
+
+
+
+
+    - name: get timestamp
+      command: date +%Y%m%d%M
+      register: timestamp
+
+
+
+    - name: get/copy backup
+      copy:
+        content: "{{ config.stdout[0] }}"
+        dest: "{{ backup_root }}/{{ inventory_hostname }}/running_config_{{ timestamp.stdout }}"
+
+
